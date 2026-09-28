@@ -45,7 +45,7 @@ $stmt = $conn->prepare("
     LEFT JOIN reviews r ON rc.id = r.card_id
     LEFT JOIN feedbacks f ON rc.id = f.card_id
     $whereClause 
-    GROUP BY rc.id 
+    GROUP BY rc.id, u.id, u.email
     ORDER BY rc.created_at DESC 
     LIMIT $perPage OFFSET $offset
 ");
