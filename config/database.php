@@ -3,13 +3,6 @@
 try {
     $dbUser = env('DB_USER');
     $dsn = "pgsql:host=" . env('DB_HOST') . ";port=" . env('DB_PORT') . ";dbname=" . env('DB_NAME');
-    
-    // Fix for Supabase Supavisor pooler (ENOIDENTIFIER error)
-    if (strpos(env('DB_HOST'), 'pooler.supabase.com') !== false && strpos($dbUser, '.') !== false) {
-        $projectRef = explode('.', $dbUser)[1];
-        // Note: PDO requires %3D instead of = inside the options value
-        $dsn .= ";options=endpoint%3D" . $projectRef;
-    }
 
     $conn = new PDO(
         $dsn,
