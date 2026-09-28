@@ -36,6 +36,11 @@ class Router
  public static function dispatch()
 {
     $url = $_GET['url'] ?? '';
+    if (empty($url) && isset($_SERVER['REQUEST_URI'])) {
+        $parsedUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $url = ltrim($parsedUrl, '/');
+    }
+    
     $method = $_SERVER['REQUEST_METHOD'];
     
     // Skip routing for static files and existing files
