@@ -73,7 +73,8 @@ class Router
             // Store params for use in the file
             $_GET['route_params'] = $params;
             
-            require $route['file'];
+            $fileToRequire = __DIR__ . '/../' . ltrim($route['file'], '/');
+            require $fileToRequire;
             exit;
         }
     }
