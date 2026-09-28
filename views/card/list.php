@@ -84,6 +84,11 @@ if (empty($cards)) {
                         <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Welcome back</span>
                         <span class="text-sm text-gray-900 font-medium"><?= htmlspecialchars($_SESSION['user_email']) ?></span>
                     </div>
+                    <?php if (isOwner()): ?>
+                        <a href="<?= url('/owner') ?>" class="px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 text-sm font-bold rounded-lg transition-colors">
+                            👑 Owner Panel
+                        </a>
+                    <?php endif; ?>
                     <div class="h-8 w-px bg-gray-300"></div>
                     <a href="<?= url('/api/auth?action=logout') ?>" 
                        class="group flex items-center text-sm font-semibold text-gray-600 hover:text-red-600 transition-colors duration-300">
