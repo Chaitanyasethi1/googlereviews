@@ -6,6 +6,6 @@ function isOwner() {
     }
     
     $ownerEmail = env('OWNER_EMAIL');
-    return $_SESSION['user_email'] === $ownerEmail;
+    return strtolower($_SESSION['user_email']) === strtolower($ownerEmail);
 }
 
