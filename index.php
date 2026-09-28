@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+ob_start();
 
 require 'config/env.php';        // Load environment variables first
 require 'config/database.php';   // This creates $conn variable
