@@ -45,7 +45,7 @@ function getHomeContent($card, $conn) {
     $feedbackCount = $stmt->fetch()['count'];
 
     // Get AI reviews count (reviews with ai_generated flag)
-    $stmt = $conn->prepare("SELECT COUNT(*) as count FROM reviews WHERE card_id = ? AND details LIKE '%ai_generated%'");
+    $stmt = $conn->prepare("SELECT COUNT(*) as count FROM reviews WHERE card_id = ? AND CAST(details AS TEXT) LIKE '%ai_generated%'");
     $stmt->execute([$card['id']]);
     $aiReviewCount = $stmt->fetch()['count'];
 
