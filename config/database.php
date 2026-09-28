@@ -7,7 +7,8 @@ try {
     // Fix for Supabase Supavisor pooler (ENOIDENTIFIER error)
     if (strpos(env('DB_HOST'), 'pooler.supabase.com') !== false && strpos($dbUser, '.') !== false) {
         $projectRef = explode('.', $dbUser)[1];
-        $dsn .= ";options=endpoint=" . $projectRef;
+        // Note: PDO requires %3D instead of = inside the options value
+        $dsn .= ";options=endpoint%3D" . $projectRef;
     }
 
     $conn = new PDO(
