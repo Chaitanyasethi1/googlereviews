@@ -128,5 +128,5 @@ function saveSettings(e) {
 
 <?php
 $content = ob_get_clean();
-require 'views/owner/layout.php';
+require __DIR__ . '/layout.php';
 ?>

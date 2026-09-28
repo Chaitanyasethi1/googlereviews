@@ -222,5 +222,5 @@ function viewUser(userId) {
 
 <?php
 $content = ob_get_clean();
-require 'views/owner/layout.php';
+require __DIR__ . '/layout.php';
 ?>

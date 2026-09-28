@@ -456,5 +456,5 @@ function getHomeContent($card, $conn) {
     return ob_get_clean();
 }
 
-require 'views/card/panel/layout.php';
+require __DIR__ . '/layout.php';
 ?>

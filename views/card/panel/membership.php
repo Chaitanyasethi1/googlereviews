@@ -428,5 +428,5 @@ $(document).keydown(function(e) {
 
 <?php
 $content = ob_get_clean();
-require 'views/card/panel/layout.php';
+require __DIR__ . '/layout.php';
 ?>
