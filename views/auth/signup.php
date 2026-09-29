@@ -41,7 +41,14 @@
                     placeholder="••••••••">
                 <p class="text-xs text-gray-400 mt-2">At least 8 characters required.</p>
             </div>
-       
+            <!-- Consent -->
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                    <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300" aria-label="Agree to terms and conditions">
+                </div>
+                <label for="terms" class="ml-2 text-sm font-medium text-gray-900">I agree with the <a href="<?= url('/terms') ?>" class="text-blue-600 hover:underline">Terms and Conditions</a> and <a href="<?= url('/privacy') ?>" class="text-blue-600 hover:underline">Privacy Policy</a>.</label>
+            </div>
+
               <!-- Error Message Box -->
         <?php if (isset($_SESSION['auth_error'])): ?>
             <div class="mb-6 flex items-center p-4 text-sm text-red-800 border-t-4 border-red-300 bg-red-50 rounded-lg" role="alert">

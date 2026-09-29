@@ -389,9 +389,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-cyan-100 border border-blue-200 rounded-2xl flex items-center justify-center mb-6 text-blue-600 text-2xl shadow-sm">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Negative Feedback Shield</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Private Feedback Routing</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        1-3 star ratings are secretly intercepted and sent directly to your private WhatsApp or email, preventing them from ever reaching Google.
+                        Direct unsatisfied customers to a private feedback form or WhatsApp, giving you a chance to resolve their issues and improve their experience before they decide to leave a public review.
                     </p>
                 </div>
 
@@ -615,9 +615,9 @@ $recentReviews = $stmt->fetchAll();
                         The world's most advanced AI review collection platform. We help local businesses build unbreakable online reputations through smart automation.
                     </p>
                     <div class="flex space-x-4 mt-6">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors shadow-sm border border-gray-100"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors shadow-sm border border-gray-100"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors shadow-sm border border-gray-100"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Twitter" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors shadow-sm border border-gray-100"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors shadow-sm border border-gray-100"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-brand-600 hover:bg-brand-50 transition-colors shadow-sm border border-gray-100"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 
@@ -642,9 +642,9 @@ $recentReviews = $stmt->fetchAll();
                 <div class="col-span-1 md:col-span-2">
                     <h4 class="font-display font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Legal</h4>
                     <ul class="space-y-4">
-                        <li><a href="#" class="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">Terms of Service</a></li>
-                        <li><a href="#" class="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">Refund Policy</a></li>
+                        <li><a href="<?= url('/privacy') ?>" class="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">Privacy Policy</a></li>
+                        <li><a href="<?= url('/terms') ?>" class="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">Terms of Service</a></li>
+                        <li><a href="<?= url('/refund') ?>" class="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">Refund Policy</a></li>
                     </ul>
                 </div>
             </div>
@@ -659,7 +659,33 @@ $recentReviews = $stmt->fetchAll();
         </div>
     </footer>
 
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-50 transform translate-y-full transition-transform duration-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-gray-600 font-medium text-center sm:text-left">
+                We use cookies to improve your experience and analyze site traffic. By continuing to use our site, you consent to our use of cookies in accordance with our <a href="<?= url('/privacy') ?>" class="text-brand-600 hover:underline">Privacy Policy</a>.
+            </p>
+            <div class="flex items-center space-x-3 shrink-0">
+                <button onclick="acceptCookies()" class="px-6 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition-colors">Accept</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Cookie Consent Logic
+        function acceptCookies() {
+            localStorage.setItem('cookieConsent', 'true');
+            $('#cookie-banner').removeClass('translate-y-0').addClass('translate-y-full');
+        }
+
+        $(document).ready(function() {
+            if (!localStorage.getItem('cookieConsent')) {
+                setTimeout(function() {
+                    $('#cookie-banner').removeClass('translate-y-full').addClass('translate-y-0');
+                }, 1000);
+            }
+        });
+
         // Initialize AOS animations
         AOS.init({
             once: true,

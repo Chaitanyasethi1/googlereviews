@@ -11,6 +11,9 @@ Router::get('/dashboard', 'views/card/list.php');
 
 // Pricing Page
 Router::get('/pricing', 'views/site/pricing.php');
+Router::get('/privacy', 'views/site/privacy.php');
+Router::get('/terms', 'views/site/terms.php');
+Router::get('/refund', 'views/site/refund.php');
 
 // Public Menu Pages - Order matters! More specific routes first
 
