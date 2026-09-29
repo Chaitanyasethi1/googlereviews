@@ -1,10 +1,11 @@
 <?php
 
-session_start();
-ob_start();
-
 require 'config/env.php';        // Load environment variables first
 require 'config/database.php';   // This creates $conn variable
+require 'app/SessionHandler.php';// Register Postgres session handler
+
+session_start();
+ob_start();
 require 'app/requireOwner.php';  // Add this line
 require 'views/main/layout/header.php'; 
 require 'app/Router.php';
