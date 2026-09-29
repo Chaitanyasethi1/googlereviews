@@ -243,17 +243,17 @@ $recentReviews = $stmt->fetchAll();
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
                     </span>
-                    Next-Gen AI Review Collection is here
+                    Intelligent Reputation Management
                 </div>
                 
                 <!-- Headline -->
                 <h1 class="text-5xl sm:text-7xl font-display font-extrabold text-gray-900 mb-8 leading-[1.1] tracking-tight">
-                    Turn happy customers into <br class="hidden sm:block" />
-                    <span class="text-gradient">5-Star Google Reviews</span>
+                    Transform Customer Experiences into <br class="hidden sm:block" />
+                    <span class="text-gradient">Verifiable Growth</span>
                 </h1>
                 
                 <p class="text-xl sm:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-                    Automate your reputation management with our AI-powered NFC cards & QR codes. Stop begging for reviews, start generating them.
+                    Streamline your review collection process with smart NFC and QR technology. Empower your customers to share authentic feedback effortlessly and scale your local SEO presence.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
@@ -264,7 +264,7 @@ $recentReviews = $stmt->fetchAll();
                     </a>
                     <a href="#how-it-works" 
                        class="w-full sm:w-auto px-8 py-4 btn-secondary font-bold rounded-2xl hover:scale-105 text-lg transition-transform flex items-center justify-center">
-                        See How It Works
+                        Explore Platform
                         <i class="fas fa-play-circle ml-3 text-brand-500"></i>
                     </a>
                 </div>
@@ -363,12 +363,12 @@ $recentReviews = $stmt->fetchAll();
     <section id="features" class="py-24 sm:py-32 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-20" data-aos="fade-up">
-                <h2 class="text-brand-600 font-bold tracking-wide uppercase text-sm mb-3">Power Features</h2>
+                <h2 class="text-brand-600 font-bold tracking-wide uppercase text-sm mb-3">Enterprise Capabilities</h2>
                 <h3 class="text-3xl sm:text-5xl font-display font-extrabold text-gray-900 mb-6">
-                    Built for <span class="text-gradient-purple">Maximum Conversion</span>
+                    Engineered for <span class="text-gradient-purple">Operational Excellence</span>
                 </h3>
                 <p class="text-lg text-gray-600">
-                    We've engineered every feature to reduce friction and maximize the number of positive reviews your business receives.
+                    We've designed our platform to reduce friction, drive engagement, and consistently elevate your brand's digital reputation.
                 </p>
             </div>
             
@@ -378,9 +378,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-fuchsia-100 border border-brand-200 rounded-2xl flex items-center justify-center mb-6 text-brand-600 text-2xl shadow-sm">
                         <i class="fas fa-brain"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">AI Smart Responses</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Intelligent Review Assistance</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        Customers hate writing. Our AI analyzes their sentiment and instantly suggests perfect, personalized review text they can post with one click.
+                        Reduce cognitive load for your clients. Our AI processes their sentiment to propose articulate, personalized feedback they can publish instantly.
                     </p>
                 </div>
 
@@ -389,9 +389,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-cyan-100 border border-blue-200 rounded-2xl flex items-center justify-center mb-6 text-blue-600 text-2xl shadow-sm">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Private Feedback Routing</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Strategic Feedback Routing</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        Direct unsatisfied customers to a private feedback form or WhatsApp, giving you a chance to resolve their issues and improve their experience before they decide to leave a public review.
+                        Direct unsatisfied customers to a secure internal channel, granting your management team the opportunity to resolve concerns prior to public escalation.
                     </p>
                 </div>
 
@@ -400,9 +400,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-green-100 to-emerald-100 border border-green-200 rounded-2xl flex items-center justify-center mb-6 text-green-600 text-2xl shadow-sm">
                         <i class="fas fa-qrcode"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Instant QR Magic</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Frictionless Capture Matrix</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        Generate beautifully branded QR codes instantly. Print them on receipts, table tents, or business cards for tap-and-go reviewing.
+                        Deploy beautifully integrated QR codes across your physical assets—receipts, point-of-sale, or packaging—for immediate tap-and-review access.
                     </p>
                 </div>
                 
@@ -411,9 +411,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-orange-100 to-red-100 border border-orange-200 rounded-2xl flex items-center justify-center mb-6 text-orange-600 text-2xl shadow-sm">
                         <i class="fab fa-whatsapp"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Direct WhatsApp Integration</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Real-time Resolution Integration</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        Let unhappy customers instantly chat with you on WhatsApp instead of leaving a bad public review. Resolve issues in real-time.
+                        Facilitate immediate dialogue by routing critical service issues directly to your WhatsApp Business endpoint for rapid service recovery.
                     </p>
                 </div>
 
@@ -422,9 +422,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-pink-100 to-rose-100 border border-pink-200 rounded-2xl flex items-center justify-center mb-6 text-pink-600 text-2xl shadow-sm">
                         <i class="fas fa-paint-brush"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Beautiful Customization</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Brand-Aligned Interfaces</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        Make your review page match your brand. Add your logo, choose theme colors, and customize the background to build trust.
+                        Maintain corporate identity throughout the review process with fully customizable environments, logos, and localized messaging.
                     </p>
                 </div>
 
@@ -433,9 +433,9 @@ $recentReviews = $stmt->fetchAll();
                     <div class="w-14 h-14 bg-gradient-to-br from-yellow-100 to-amber-100 border border-yellow-200 rounded-2xl flex items-center justify-center mb-6 text-yellow-600 text-2xl shadow-sm">
                         <i class="fas fa-chart-pie"></i>
                     </div>
-                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Deep Analytics</h4>
+                    <h4 class="text-xl font-display font-bold text-gray-900 mb-3">Comprehensive Analytics</h4>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        Track scans, conversions, and rating trends over time. Know exactly what your customers think with our unified analytics dashboard.
+                        Monitor conversion funnels, scan metrics, and longitudinal sentiment trends via our centralized, data-rich executive dashboard.
                     </p>
                 </div>
             </div>
@@ -450,11 +450,11 @@ $recentReviews = $stmt->fetchAll();
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div data-aos="fade-right">
                     <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-gray-900 mb-6 leading-tight">
-                        Three steps to <br/>
-                        <span class="text-gradient">Review Domination</span>
+                        A Streamlined Path to <br/>
+                        <span class="text-gradient">Digital Trust</span>
                     </h2>
                     <p class="text-lg text-gray-600 mb-10">
-                        We've simplified the entire process so you can set it up in minutes and watch the 5-star reviews roll in automatically.
+                        We have optimized the implementation process so your organization can deploy and begin capturing verifiable feedback immediately.
                     </p>
                     
                     <div class="space-y-8">
@@ -463,8 +463,8 @@ $recentReviews = $stmt->fetchAll();
                                 1
                             </div>
                             <div class="ml-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">Create & Customize</h4>
-                                <p class="text-gray-600 text-sm">Enter your Google Business link, upload your logo, and customize your theme in our powerful dashboard.</p>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Deploy Your Interface</h4>
+                                <p class="text-gray-600 text-sm">Register your physical locations, upload corporate assets, and configure your localized feedback environment.</p>
                             </div>
                         </div>
                         
@@ -473,8 +473,8 @@ $recentReviews = $stmt->fetchAll();
                                 2
                             </div>
                             <div class="ml-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">Display QR Codes</h4>
-                                <p class="text-gray-600 text-sm">Download your custom QR code instantly. Place it on tables, counters, packaging, or receipts.</p>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Distribute Collection Points</h4>
+                                <p class="text-gray-600 text-sm">Download high-resolution matrices or provision NFC hardware for deployment across your service footprint.</p>
                             </div>
                         </div>
                         
@@ -483,8 +483,8 @@ $recentReviews = $stmt->fetchAll();
                                 3
                             </div>
                             <div class="ml-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">AI Does The Rest</h4>
-                                <p class="text-gray-600 text-sm">Customers scan, tap 5 stars, and our AI writes the perfect review for them to post with one click.</p>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Automate Authentic Reviews</h4>
+                                <p class="text-gray-600 text-sm">Clients authenticate securely, submit their sentiment, and our engine assists in articulating their positive experience.</p>
                             </div>
                         </div>
                     </div>
@@ -583,18 +583,18 @@ $recentReviews = $stmt->fetchAll();
                 
                 <div class="relative z-10" data-aos="zoom-in">
                     <h2 class="text-4xl sm:text-6xl font-display font-extrabold text-gray-900 mb-6">
-                        Ready to skyrocket your <br/> Google ranking?
+                        Ready to elevate your <br/> digital presence?
                     </h2>
                     <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light">
-                        Join <?= number_format($totalUsers) ?>+ smart businesses dominating their local SEO with an endless stream of 5-star reviews.
+                        Join <?= number_format($totalUsers) ?>+ enterprise and regional organizations actively managing their digital reputation through intelligent automation.
                     </p>
                     
                     <a href="<?= url('/signup') ?>" 
                        class="inline-flex items-center px-10 py-5 btn-primary text-white font-bold rounded-2xl shadow-xl hover:scale-105 text-xl transition-all">
-                        Create Your Card Free
+                        Deploy Your Platform
                         <i class="fas fa-arrow-right ml-3"></i>
                     </a>
-                    <p class="text-gray-500 mt-6 text-sm font-medium">3-Day Free Trial. No credit card required.</p>
+                    <p class="text-gray-500 mt-6 text-sm font-medium">Risk-free trial available. Immediate provisioning.</p>
                 </div>
             </div>
         </div>
