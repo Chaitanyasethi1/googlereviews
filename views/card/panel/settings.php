@@ -172,7 +172,8 @@ function getSettingsContent($card, $business, $themes, $conn) {
                     <div class="flex-shrink-0">
                         <div id="logoPreviewContainer" class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
                             <?php if (!empty($business['logo'])): ?>
-                                <img src="<?= url('/' . $business['logo']) ?>" 
+                                <?php $logoSrc = strpos($business['logo'], 'data:') === 0 ? $business['logo'] : url('/' . $business['logo']); ?>
+                                <img src="<?= $logoSrc ?>" 
                                      alt="Logo" 
                                      id="logoPreview"
                                      class="w-full h-full object-cover">

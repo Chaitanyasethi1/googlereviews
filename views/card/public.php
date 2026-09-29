@@ -300,7 +300,8 @@ ob_start();
                         <?php if (!empty($business['logo'])): ?>
                             <div class="mb-4 inline-block">
                                 <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl p-1 bg-white/20 backdrop-blur-sm">
-                                    <img src="<?= url("/" . htmlspecialchars($business['logo'])) ?>" 
+                                    <?php $logoSrc = strpos($business['logo'], 'data:') === 0 ? $business['logo'] : url("/" . htmlspecialchars($business['logo'])); ?>
+                                    <img src="<?= $logoSrc ?>" 
                                          alt="Logo" 
                                          class="w-full h-full rounded-2xl object-cover shadow-lg">
                                 </div>

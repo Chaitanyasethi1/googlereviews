@@ -274,29 +274,11 @@ function handleUpdateSettings()
     $logoUrl = $details['logo'] ?? null;
     
     if ($removeLogo) {
-        // Delete existing logo file
-        if ($logoUrl) {
-            $imagePath = $projectRoot . $logoUrl;
-            if (file_exists($imagePath)) {
-                @unlink($imagePath);
-            }
-        }
         $logoUrl = null;
     }
     
     // Handle new logo upload
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = $projectRoot . 'uploads/';
-        
-        // Create uploads directory if not exists
-        if (!is_dir($uploadDir)) {
-            if (!mkdir($uploadDir, 0777, true)) {
-                $_SESSION['settings_error'] = 'Failed to create upload directory.';
-                header('Location: ' . url('/edit/' . $slug . '/settings'));
-                exit;
-            }
-        }
-        
         // Validate file type
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
         $fileType = $_FILES['logo']['type'];
@@ -314,26 +296,12 @@ function handleUpdateSettings()
             exit;
         }
         
-        // Generate unique filename
-        $ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
-        if (empty($ext)) {
-            $ext = 'jpg';
-        }
-        
-        $filename = uniqid('logo_') . '.' . $ext;
-        $uploadPath = $uploadDir . $filename;
-        
-        if (move_uploaded_file($_FILES['logo']['tmp_name'], $uploadPath)) {
-            // Delete old logo if exists
-            if ($logoUrl) {
-                $oldImagePath = $projectRoot . $logoUrl;
-                if (file_exists($oldImagePath)) {
-                    @unlink($oldImagePath);
-                }
-            }
-            $logoUrl = 'uploads/' . $filename;
+        $fileData = file_get_contents($_FILES['logo']['tmp_name']);
+        if ($fileData !== false) {
+            $base64 = base64_encode($fileData);
+            $logoUrl = 'data:' . $fileType . ';base64,' . $base64;
         } else {
-            $_SESSION['settings_error'] = 'Failed to upload logo.';
+            $_SESSION['settings_error'] = 'Failed to read uploaded logo.';
             header('Location: ' . url('/edit/' . $slug . '/settings'));
             exit;
         }
