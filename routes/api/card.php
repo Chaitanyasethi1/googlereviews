@@ -136,8 +136,13 @@ function handleUpdateCard()
     }
 
     // Verify ownership
-    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE id = ? AND user_id = ?");
-    $stmt->execute([$cardId, $_SESSION['user_id']]);
+    if (isOwner()) {
+        $stmt = $conn->prepare("SELECT * FROM review_cards WHERE id = ?");
+        $stmt->execute([$cardId]);
+    } else {
+        $stmt = $conn->prepare("SELECT * FROM review_cards WHERE id = ? AND user_id = ?");
+        $stmt->execute([$cardId, $_SESSION['user_id']]);
+    }
     $card = $stmt->fetch();
 
     if (!$card) {
@@ -179,8 +184,13 @@ function handleDeleteCard()
     }
 
     // Verify ownership
-    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
-    $stmt->execute([$slug, $_SESSION['user_id']]);
+    if (isOwner()) {
+        $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ?");
+        $stmt->execute([$slug]);
+    } else {
+        $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
+        $stmt->execute([$slug, $_SESSION['user_id']]);
+    }
     $card = $stmt->fetch();
 
     if (!$card) {
@@ -191,8 +201,8 @@ function handleDeleteCard()
 
     try {
         // Delete card (cascading will delete reviews and feedbacks)
-        $stmt = $conn->prepare("DELETE FROM review_cards WHERE id = ? AND user_id = ?");
-        $stmt->execute([$card['id'], $_SESSION['user_id']]);
+        $stmt = $conn->prepare("DELETE FROM review_cards WHERE id = ?");
+        $stmt->execute([$card['id']]);
 
         echo json_encode(['success' => true, 'message' => 'Card deleted successfully']);
     } catch (PDOException $e) {
@@ -256,8 +266,13 @@ function handleUpdateSettings()
     $removeLogo = isset($_POST['remove_logo']);
     
     // Verify ownership
-    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE id = ? AND user_id = ?");
-    $stmt->execute([$cardId, $_SESSION['user_id']]);
+    if (isOwner()) {
+        $stmt = $conn->prepare("SELECT * FROM review_cards WHERE id = ?");
+        $stmt->execute([$cardId]);
+    } else {
+        $stmt = $conn->prepare("SELECT * FROM review_cards WHERE id = ? AND user_id = ?");
+        $stmt->execute([$cardId, $_SESSION['user_id']]);
+    }
     $card = $stmt->fetch();
     
     if (!$card) {
@@ -326,17 +341,30 @@ function handleUpdateSettings()
     
     // Update card
     try {
-        $stmt = $conn->prepare("
-            UPDATE review_cards 
-            SET name = ?, details = ? 
-            WHERE id = ? AND user_id = ?
-        ");
-        $stmt->execute([
-            $name,
-            json_encode($details),
-            $cardId,
-            $_SESSION['user_id']
-        ]);
+        if (isOwner()) {
+            $stmt = $conn->prepare("
+                UPDATE review_cards 
+                SET name = ?, details = ? 
+                WHERE id = ?
+            ");
+            $stmt->execute([
+                $name,
+                json_encode($details),
+                $cardId
+            ]);
+        } else {
+            $stmt = $conn->prepare("
+                UPDATE review_cards 
+                SET name = ?, details = ? 
+                WHERE id = ? AND user_id = ?
+            ");
+            $stmt->execute([
+                $name,
+                json_encode($details),
+                $cardId,
+                $_SESSION['user_id']
+            ]);
+        }
         
         $_SESSION['settings_success'] = 'Settings updated successfully!';
         header('Location: ' . url('/edit/' . $slug . '/settings'));

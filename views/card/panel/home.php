@@ -13,12 +13,21 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Get card details
-$stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
-$stmt->execute([$slug, $_SESSION['user_id']]);
+if (isOwner()) {
+    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ?");
+    $stmt->execute([$slug]);
+} else {
+    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
+    $stmt->execute([$slug, $_SESSION['user_id']]);
+}
 $card = $stmt->fetch();
 
 if (!$card) {
-    header('Location: ' . url('/dashboard'));
+    if (isOwner()) {
+        header('Location: ' . url('/owner/cards'));
+    } else {
+        header('Location: ' . url('/dashboard'));
+    }
     exit;
 }
 
@@ -73,8 +82,12 @@ function getHomeContent($card, $conn) {
                 <div class="ml-3 flex-1">
                     <p class="text-sm text-blue-700">
                         <span class="font-medium">Trial Period:</span> 
-                        Your trial expires on <?= date('M d, Y', strtotime($card['expiry_date'])) ?> 
-                        (<?= ceil((strtotime($card['expiry_date']) - time()) / 86400) ?> days remaining)
+                        <?php if (!empty($card['expiry_date'])): ?>
+                            Your trial expires on <?= date('M d, Y', strtotime($card['expiry_date'])) ?> 
+                            (<?= ceil((strtotime($card['expiry_date']) - time()) / 86400) ?> days remaining)
+                        <?php else: ?>
+                            Trial active
+                        <?php endif; ?>
                     </p>
                 </div>
                 <a href="<?= url('/edit/'. $card['slug'].'/membership') ?>" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">

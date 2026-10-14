@@ -9,12 +9,21 @@ global $conn;
 $slug = $_GET['route_params']['slug'] ?? '';
 
 // Get card details and verify ownership
-$stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
-$stmt->execute([$slug, $_SESSION['user_id']]);
+if (isOwner()) {
+    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ?");
+    $stmt->execute([$slug]);
+} else {
+    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
+    $stmt->execute([$slug, $_SESSION['user_id']]);
+}
 $card = $stmt->fetch();
 
 if (!$card) {
-    header('Location: ' . url('/dashboard'));
+    if (isOwner()) {
+        header('Location: ' . url('/owner/cards'));
+    } else {
+        header('Location: ' . url('/dashboard'));
+    }
     exit;
 }
 
@@ -55,7 +64,7 @@ $currentPage = $page ?? 'home';
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     
-                    <a href="<?= url('/dashboard') ?>" class="text-gray-400 hover:text-gray-600 mr-2 sm:mr-4">
+                    <a href="<?= isOwner() ? url('/owner/cards') : url('/dashboard') ?>" class="text-gray-400 hover:text-gray-600 mr-2 sm:mr-4" title="<?= isOwner() ? 'Back to Owner Cards' : 'Back to Dashboard' ?>">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
@@ -67,10 +76,17 @@ $currentPage = $page ?? 'home';
                     </div>
                     <span class="hidden sm:inline ml-3 px-2 py-1 text-xs font-medium rounded-full 
                         <?= $card['membership'] === 'trial' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' ?>">
-                        <?= ucfirst($card['membership']) ?>
+                        <?= ucfirst($card['membership'] ?? 'trial') ?>
                     </span>
                 </div>
                 <div class="flex items-center space-x-2 sm:space-x-4">
+                    <?php if (isOwner()): ?>
+                        <a href="<?= url('/owner') ?>"
+                            class="text-xs sm:text-sm text-purple-700 hover:text-purple-900 font-medium bg-purple-50 hover:bg-purple-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                            <i class="fas fa-crown text-purple-600"></i>
+                            <span class="hidden sm:inline">Owner Panel</span>
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= url('/review/' . $card['slug']) ?>" target="_blank"
                         class="text-xs sm:text-sm text-blue-600 hover:text-blue-800 font-medium">
                         <i class="fas fa-external-link-alt mr-1"></i>

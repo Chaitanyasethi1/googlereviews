@@ -6,8 +6,7 @@ require 'app/SessionHandler.php';// Register Postgres session handler
 
 session_start();
 ob_start();
-require 'app/requireOwner.php';  // Add this line
-require 'views/main/layout/header.php'; 
+require 'app/requireOwner.php';
 require 'app/Router.php';
 require 'routes/index.php';
 

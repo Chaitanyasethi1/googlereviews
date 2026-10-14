@@ -12,12 +12,21 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Get card details
-$stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
-$stmt->execute([$slug, $_SESSION['user_id']]);
+if (isOwner()) {
+    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ?");
+    $stmt->execute([$slug]);
+} else {
+    $stmt = $conn->prepare("SELECT * FROM review_cards WHERE slug = ? AND user_id = ?");
+    $stmt->execute([$slug, $_SESSION['user_id']]);
+}
 $card = $stmt->fetch();
 
 if (!$card) {
-    header('Location: ' . url('/dashboard'));
+    if (isOwner()) {
+        header('Location: ' . url('/owner/cards'));
+    } else {
+        header('Location: ' . url('/dashboard'));
+    }
     exit;
 }
 
