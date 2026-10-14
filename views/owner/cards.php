@@ -269,60 +269,86 @@ ob_start();
 
 <!-- Membership Modal -->
 <div id="membershipModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold">Change Membership</h3>
-            <button onclick="closeMembershipModal()" class="text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times"></i>
+            <h3 class="text-xl font-bold text-gray-900">Change Membership</h3>
+            <button onclick="closeMembershipModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fas fa-times text-lg"></i>
             </button>
         </div>
         
-        <p class="text-gray-600 mb-4">
-            Card: <span id="membershipCardName" class="font-bold"></span>
+        <p class="text-gray-600 mb-4 text-sm">
+            Card: <span id="membershipCardName" class="font-bold text-gray-900"></span>
         </p>
         
         <form id="membershipForm" onsubmit="updateMembership(event)">
             <input type="hidden" id="membershipCardId" name="card_id">
             
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Current Membership</label>
-                <span id="currentMembership" class="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium"></span>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Current Membership</label>
+                <span id="currentMembership" class="inline-block px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold"></span>
             </div>
             
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Select Plan *</label>
-                <select id="planSelect" name="plan_id" required class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
-                    <option value="">Choose a plan...</option>
-                    <?php foreach ($plans as $plan): ?>
-                        <option value="<?= $plan['id'] ?>" 
-                                data-duration="<?= $plan['duration'] ?>"
-                                data-name="<?= htmlspecialchars($plan['name']) ?>">
-                            <?= htmlspecialchars($plan['name']) ?> - ₹<?= number_format($plan['sale_price'] ?? $plan['price']) ?> (<?= $plan['duration'] ?> days)
-                        </option>
-                    <?php endforeach; ?>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Select Plan or Preset</label>
+                <select id="planSelect" name="plan_id" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm">
+                    <option value="">Choose a plan or preset...</option>
+                    <optgroup label="Quick Presets">
+                        <option value="preset_trial_7" data-duration="7" data-name="trial">Free Trial (7 Days)</option>
+                        <option value="preset_trial_14" data-duration="14" data-name="trial">Free Trial (14 Days)</option>
+                        <option value="preset_trial_30" data-duration="30" data-name="trial">Free Trial (30 Days)</option>
+                        <option value="preset_pro_30" data-duration="30" data-name="pro">Pro Monthly (30 Days)</option>
+                        <option value="preset_pro_365" data-duration="365" data-name="pro">Pro Yearly (365 Days)</option>
+                        <option value="preset_enterprise_365" data-duration="365" data-name="enterprise">Enterprise Yearly (365 Days)</option>
+                        <option value="preset_lifetime" data-duration="3650" data-name="enterprise">Lifetime Access (10 Years)</option>
+                    </optgroup>
+                    <?php if (!empty($plans)): ?>
+                        <optgroup label="Saved Subscription Plans">
+                            <?php foreach ($plans as $plan): ?>
+                                <option value="<?= $plan['id'] ?>" 
+                                        data-duration="<?= $plan['duration'] ?>"
+                                        data-name="<?= htmlspecialchars($plan['name']) ?>">
+                                    <?= htmlspecialchars($plan['name']) ?> - ₹<?= number_format($plan['sale_price'] ?? $plan['price']) ?> (<?= $plan['duration'] ?> days)
+                                </option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                    <?php endif; ?>
                 </select>
+                <p class="text-xs text-gray-400 mt-1">Select to auto-fill duration and type, or customize manually below.</p>
             </div>
             
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Membership Type</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Membership Type *</label>
+                <div class="flex gap-2 mb-2">
+                    <button type="button" onclick="setMembershipType('trial')" class="px-2.5 py-1 text-xs font-medium rounded-md bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-700 transition-colors">Trial</button>
+                    <button type="button" onclick="setMembershipType('pro')" class="px-2.5 py-1 text-xs font-medium rounded-md bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-700 transition-colors">Pro</button>
+                    <button type="button" onclick="setMembershipType('enterprise')" class="px-2.5 py-1 text-xs font-medium rounded-md bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-700 transition-colors">Enterprise</button>
+                </div>
                 <input type="text" id="membershipType" name="membership" required
-                       class="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50"
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm"
                        placeholder="e.g., trial, pro, enterprise">
-                <p class="text-xs text-gray-500 mt-1">Auto-filled from plan name</p>
             </div>
             
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+            <div class="mb-5">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date & Time *</label>
                 <input type="datetime-local" id="expiryDate" name="expiry_date" required
-                       class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm mb-2">
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="text-xs text-gray-500 self-center mr-1">Quick add:</span>
+                    <button type="button" onclick="addDaysToExpiry(7)" class="px-2 py-0.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors">+7d</button>
+                    <button type="button" onclick="addDaysToExpiry(14)" class="px-2 py-0.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors">+14d</button>
+                    <button type="button" onclick="addDaysToExpiry(30)" class="px-2 py-0.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors">+30d</button>
+                    <button type="button" onclick="addDaysToExpiry(90)" class="px-2 py-0.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors">+90d</button>
+                    <button type="button" onclick="addDaysToExpiry(365)" class="px-2 py-0.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors">+1 Year</button>
+                </div>
             </div>
             
             <div class="flex space-x-3">
                 <button type="button" onclick="closeMembershipModal()" 
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">Cancel</button>
                 <button type="submit" 
-                        class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium">
-                    <i class="fas fa-crown mr-2"></i> Update Membership
+                        class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium shadow-sm hover:shadow">
+                    <i class="fas fa-crown mr-1.5"></i> Update Membership
                 </button>
             </div>
         </form>
@@ -330,20 +356,42 @@ ob_start();
 </div>
 
 <script>
+function formatLocalDateTime(d) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function setMembershipType(type) {
+    $('#membershipType').val(type);
+}
+
+function addDaysToExpiry(days) {
+    const now = new Date();
+    now.setDate(now.getDate() + parseInt(days));
+    $('#expiryDate').val(formatLocalDateTime(now));
+}
+
 function openMembershipModal(cardId, cardName, currentMembership, currentExpiry) {
     $('#membershipCardId').val(cardId);
     $('#membershipCardName').text(cardName);
-    $('#currentMembership').text(currentMembership.charAt(0).toUpperCase() + currentMembership.slice(1));
-    $('#membershipType').val(currentMembership);
+    const displayMembership = (currentMembership || 'trial');
+    $('#currentMembership').text(displayMembership.charAt(0).toUpperCase() + displayMembership.slice(1));
+    $('#membershipType').val(displayMembership);
     
     // Set expiry date if exists
-    if (currentExpiry && currentExpiry !== '') {
+    if (currentExpiry && currentExpiry !== '' && currentExpiry !== 'null') {
         const expiry = new Date(currentExpiry.replace(' ', 'T'));
-        $('#expiryDate').val(expiry.toISOString().slice(0, 16));
+        if (!isNaN(expiry.getTime())) {
+            $('#expiryDate').val(formatLocalDateTime(expiry));
+        } else {
+            const defaultExpiry = new Date();
+            defaultExpiry.setDate(defaultExpiry.getDate() + 30);
+            $('#expiryDate').val(formatLocalDateTime(defaultExpiry));
+        }
     } else {
         const defaultExpiry = new Date();
         defaultExpiry.setDate(defaultExpiry.getDate() + 30);
-        $('#expiryDate').val(defaultExpiry.toISOString().slice(0, 16));
+        $('#expiryDate').val(formatLocalDateTime(defaultExpiry));
     }
     
     $('#planSelect').val('');
@@ -354,15 +402,14 @@ function closeMembershipModal() {
     $('#membershipModal').removeClass('flex').addClass('hidden');
 }
 
-// Auto-fill when plan is selected
+// Auto-fill when plan or preset is selected
 $('#planSelect').on('change', function() {
     const selectedOption = $(this).find('option:selected');
     const planName = selectedOption.data('name');
     const duration = selectedOption.data('duration');
     
     if (planName && duration) {
-        // Set membership type from plan name
-        const nameLower = planName.toLowerCase();
+        const nameLower = String(planName).toLowerCase();
         if (nameLower.includes('trial')) {
             $('#membershipType').val('trial');
         } else if (nameLower.includes('enterprise')) {
@@ -373,10 +420,9 @@ $('#planSelect').on('change', function() {
             $('#membershipType').val(nameLower);
         }
         
-        // Calculate expiry date
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + parseInt(duration));
-        $('#expiryDate').val(expiryDate.toISOString().slice(0, 16));
+        $('#expiryDate').val(formatLocalDateTime(expiryDate));
     }
 });
 

@@ -38,7 +38,9 @@ class Router
     $url = $_GET['url'] ?? '';
     if (empty($url) && isset($_SERVER['REQUEST_URI'])) {
         $parsedUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $url = ltrim($parsedUrl, '/');
+        $url = trim($parsedUrl, '/');
+    } else {
+        $url = trim($url, '/');
     }
     
     $method = $_SERVER['REQUEST_METHOD'];
@@ -93,7 +95,7 @@ class Router
     {
         // Convert {param} to named regex groups
         $pattern = preg_replace('/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/', '(?P<$1>[^/]+)', $route);
-        return '#^' . trim($pattern, '/') . '$#';
+        return '#^' . trim($pattern, '/') . '/?$#';
     }
 }
 ?>

@@ -26,6 +26,7 @@ Router::get('/edit/{slug}/membership', 'views/card/panel/membership.php');
 // Owner Panel Routes
 Router::get('/owner', 'views/owner/home.php');
 Router::get('/owner/users', 'views/owner/users.php');
+Router::get('/owner/users/{id}', 'views/owner/user_details.php');
 Router::get('/owner/cards', 'views/owner/cards.php');
 Router::get('/owner/plans', 'views/owner/plans.php');
 Router::get('/owner/settings', 'views/owner/settings.php');
@@ -60,6 +61,7 @@ Router::get('/api/public/feedback', 'routes/api/feedback.php');
 Router::get('/api/owner', 'routes/api/owner/plans.php');
 Router::post('/api/owner/plans', 'routes/api/owner/plans.php');
 Router::post('/api/owner/cards', 'routes/api/owner/cards.php');
+Router::post('/api/owner/users', 'routes/api/owner/users.php');
 Router::post('/api/owner/settings', 'routes/api/owner/settings.php');
 // Dispatch
 Router::dispatch();
