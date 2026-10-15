@@ -50,7 +50,7 @@ $business = [
     'facebook' => $details['facebook'] ?? '',
     'instagram' => $details['instagram'] ?? '',
     'website' => $details['website'] ?? '',
-    'google_review_url' => $details['google_review_url'] ?? 'https://www.google.com/search?q=review',
+    'google_review_url' => !empty($details['google_review_url']) ? $details['google_review_url'] : ('https://www.google.com/search?q=' . urlencode($card['name'] . ' reviews')),
     'business_keywords' => $details['business_keywords'] ?? ['professional', 'quality', 'excellent service', 'friendly staff', 'clean', 'affordable', 'great value'],
     'enable_keyword_selection' => $details['enable_keyword_selection'] ?? true
 ];
@@ -533,16 +533,15 @@ ob_start();
                                 class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-<?= $selectedTheme ?>-500 outline-none transition-all text-sm">
                         </div>
 
-                        <!-- Google Review Button - Always visible but disabled until review is selected -->
+                        <!-- Google Review Button -->
                         <button onclick="reviewOnGoogle()"
                             id="googleReviewBtn"
-                            disabled
-                            class="w-full py-6 rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] text-white btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                            class="w-full py-5 rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] text-white btn-primary flex items-center justify-center">
                             <i class="fab fa-google mr-3 text-xl"></i>
                             Review us on Google
                         </button>
-                        <p class="text-[11px] text-center text-gray-400 mt-3">
-                            Select a review above to enable Google review
+                        <p id="googleReviewHint" class="text-xs text-center text-gray-500 mt-3 font-medium">
+                            <i class="fas fa-copy text-gray-400 mr-1"></i> Review will be copied automatically — just paste on Google!
                         </p>
                     </div>
 
@@ -844,19 +843,81 @@ ob_start();
             }
             $('#aiReviewsSection').removeClass('hidden').addClass('fade-in');
             
+            // Auto-select first review immediately so button is active & ready
+            if (reviews && reviews.length > 0) {
+                selectReview(0);
+            }
+            
             setTimeout(() => {
                 $('#aiReviewsSection')[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
+        }
+
+        // Reliable clipboard copy function for iOS Safari, Android, and Desktop
+        function copyToClipboardReliable(text) {
+            if (!text) return false;
+            
+            // 1. Try modern clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    navigator.clipboard.writeText(text).catch(() => {});
+                } catch(e) {}
+            }
+            
+            // 2. iOS Safari & Android reliable fallback using textarea
+            try {
+                const el = document.createElement('textarea');
+                el.value = text;
+                el.setAttribute('readonly', '');
+                el.style.position = 'fixed';
+                el.style.top = '0';
+                el.style.left = '0';
+                el.style.width = '2em';
+                el.style.height = '2em';
+                el.style.padding = '0';
+                el.style.border = 'none';
+                el.style.outline = 'none';
+                el.style.boxShadow = 'none';
+                el.style.background = 'transparent';
+                el.style.fontSize = '16px'; // Prevents iOS Safari auto-zoom
+                document.body.appendChild(el);
+
+                if (/iPad|iPod|iPhone/i.test(navigator.userAgent)) {
+                    const editable = el.contentEditable;
+                    const readOnly = el.readOnly;
+                    el.contentEditable = 'true';
+                    el.readOnly = false;
+                    const range = document.createRange();
+                    range.selectNodeContents(el);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    el.setSelectionRange(0, 999999);
+                    el.contentEditable = editable;
+                    el.readOnly = readOnly;
+                } else {
+                    el.select();
+                }
+
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                return true;
+            } catch (err) {
+                return false;
+            }
         }
 
         function selectReview(index) {
             if (isExpired) return;
             
             selectedReviewIndex = index;
-            selectedReviewText = aiReviews[index];
+            selectedReviewText = aiReviews[index] || '';
             $('#googleReviewBtn').prop('disabled', false);
             
-            // Update visual
+            // Quietly copy to clipboard so it's ready
+            copyToClipboardReliable(selectedReviewText);
+            
+            // Update visual selection
             $('[id^="reviewBtn"]').each(function(i) {
                 const btn = $(this);
                 const badge = $(`#reviewBadge${i}`);
@@ -881,8 +942,9 @@ ob_start();
                 }
             });
             
-            // Update Google review button text
+            // Update Google review button and hint
             $('#googleReviewBtn').html('<i class="fab fa-google mr-3 text-xl"></i> Review us on Google');
+            $('#googleReviewHint').html('<i class="fas fa-check text-green-500 mr-1"></i> Review #' + (index + 1) + ' copied! Tap button to open Google & paste.');
         }
 
         function copyReviewText(text, index) {
@@ -891,33 +953,10 @@ ob_start();
                 return;
             }
             
-            // Copy to clipboard
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('✅ Review copied to clipboard!');
-                    $(`#copyIcon${index}`).removeClass('fa-copy').addClass('fa-check-circle text-green-600');
-                    // Automatically select this review
-                    selectReview(index);
-                    // Save review
-                    saveReview(text);
-                }).catch(() => {
-                    fallbackCopy(text, index);
-                });
-            } else {
-                fallbackCopy(text, index);
-            }
-        }
-
-        function fallbackCopy(text, index) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showToast('✅ Review copied to clipboard!');
-            $(`#copyIcon${index}`).removeClass('fa-copy').addClass('fa-check-circle text-green-600');
             selectReview(index);
+            copyToClipboardReliable(text);
+            showToast('✅ Review copied to clipboard! Ready to paste on Google.');
+            $(`#copyIcon${index}`).removeClass('fa-copy').addClass('fa-check-circle text-green-600');
             saveReview(text);
         }
 
@@ -946,50 +985,50 @@ ob_start();
         }
 
         function reviewOnGoogle() {
-            if (isExpired || !selectedReviewText) {
-                showToast('⚠️ Please select a review first.');
+            if (isExpired) {
+                showToast('⚠️ Membership expired. Please renew to leave a review.');
                 return;
             }
             
-            // Show loading state
-            const btn = $('#googleReviewBtn');
-            btn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Redirecting...').prop('disabled', true);
+            // If no review selected yet, auto-select first or use fallback
+            if (!selectedReviewText) {
+                if (aiReviews && aiReviews.length > 0) {
+                    selectReview(0);
+                } else {
+                    selectedReviewText = "Excellent service and high quality! Truly impressed with the experience.";
+                }
+            }
             
-            // Copy the review first
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(selectedReviewText).then(() => {
-                    showToast('✅ Review copied! Redirecting to Google...');
-                    setTimeout(() => {
-                        window.open(googleReviewUrl, '_blank');
-                        btn.html('<i class="fab fa-google mr-3 text-xl"></i> Review us on Google').prop('disabled', false);
-                    }, 1500);
-                }).catch(() => {
-                    // Fallback copy
-                    const textarea = document.createElement('textarea');
-                    textarea.value = selectedReviewText;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    showToast('✅ Review copied! Redirecting to Google...');
-                    setTimeout(() => {
-                        window.open(googleReviewUrl, '_blank');
-                        btn.html('<i class="fab fa-google mr-3 text-xl"></i> Review us on Google').prop('disabled', false);
-                    }, 1500);
-                });
-            } else {
-                // Fallback for non-clipboard browsers
-                const textarea = document.createElement('textarea');
-                textarea.value = selectedReviewText;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showToast('✅ Review copied! Redirecting to Google...');
+            // Copy the review text immediately (synchronous in click event for iPhone Safari)
+            copyToClipboardReliable(selectedReviewText);
+            
+            // Save in database
+            saveReview(selectedReviewText);
+            
+            const btn = $('#googleReviewBtn');
+            btn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Opening Google...').prop('disabled', true);
+            showToast('✅ Review copied! Opening Google...');
+            
+            const targetUrl = googleReviewUrl || ('https://www.google.com/search?q=' + encodeURIComponent('<?= htmlspecialchars($business['name'], ENT_QUOTES) ?> reviews'));
+            
+            // Detect iPhone / iPad / Android mobile
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // On iOS Safari, setTimeout with window.open is blocked by popup blocker.
+                // Using window.location.href works 100% reliably and directly opens Google Maps app or Safari review page!
                 setTimeout(() => {
-                    window.open(googleReviewUrl, '_blank');
+                    window.location.href = targetUrl;
+                    setTimeout(() => {
+                        btn.html('<i class="fab fa-google mr-3 text-xl"></i> Review us on Google').prop('disabled', false);
+                    }, 1200);
+                }, 150);
+            } else {
+                // Desktop: open in new tab
+                window.open(targetUrl, '_blank');
+                setTimeout(() => {
                     btn.html('<i class="fab fa-google mr-3 text-xl"></i> Review us on Google').prop('disabled', false);
-                }, 1500);
+                }, 1000);
             }
         }
 
