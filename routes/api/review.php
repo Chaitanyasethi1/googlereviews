@@ -171,6 +171,14 @@ function handleSubmitFeedback()
 
 function generateAIReviews($businessName, $keywords, $customerName = '')
 {
+    // Sanitize keywords
+    if (is_string($keywords)) {
+        $keywords = array_filter(array_map('trim', explode(',', $keywords)));
+    }
+    if (!is_array($keywords) || empty($keywords)) {
+        $keywords = ['quality service', 'friendly staff', 'highly recommended'];
+    }
+
     $apiKey = env("GROQ_API_KEY");
 
     // If no API key, return fallback reviews
@@ -184,11 +192,13 @@ function generateAIReviews($businessName, $keywords, $customerName = '')
     }
 
     try {
-        $prompt = "Write 3 distinct, short Google reviews for a business named \"{$businessName}\". 
-        Include these keywords naturally: " . implode(", ", $keywords) . ". 
-        " . (!empty($customerName) ? "The customer's name is {$customerName}. Use their name in the reviews." : "Don't use a specific customer name.") . "
-        Make them sound like real customers. 
-        Return the result as a JSON object with a key named \"reviews\" containing an array of strings.";
+        $keywordsStr = implode(", ", $keywords);
+        $customerPrompt = !empty($customerName) ? "The customer's name is {$customerName}. Naturally include it or write from their perspective." : "Don't use any placeholder customer name.";
+        $prompt = "Write 3 distinct, authentic, positive 5-star Google reviews for \"{$businessName}\". 
+        Naturally highlight: {$keywordsStr}. 
+        {$customerPrompt}
+        Keep each review between 1 to 3 sentences, sounding like a genuine happy customer. 
+        Return ONLY a JSON object with a key named \"reviews\" containing an array of 3 string reviews.";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.groq.com/openai/v1/chat/completions");
@@ -203,7 +213,7 @@ function generateAIReviews($businessName, $keywords, $customerName = '')
             "messages" => [
                 [
                     "role" => "system",
-                    "content" => "You are a helpful assistant that only outputs valid JSON. Always return an object with a 'reviews' key."
+                    "content" => "You are an AI that writes authentic Google reviews for local businesses. You only output valid JSON with a single key 'reviews' containing an array of 3 strings."
                 ],
                 [
                     "role" => "user",
@@ -213,7 +223,7 @@ function generateAIReviews($businessName, $keywords, $customerName = '')
             "response_format" => ["type" => "json_object"],
             "temperature" => 0.7
         ]));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -230,14 +240,14 @@ function generateAIReviews($businessName, $keywords, $customerName = '')
                 $content = $data['choices'][0]['message']['content'];
                 $parsed = json_decode($content, true);
 
-                if (isset($parsed['reviews']) && is_array($parsed['reviews'])) {
-                    return $parsed['reviews'];
+                if (isset($parsed['reviews']) && is_array($parsed['reviews']) && count($parsed['reviews']) > 0) {
+                    return array_values($parsed['reviews']);
                 }
 
-                // Try to extract reviews from response
+                // Try to extract array of reviews if key is named differently
                 if (is_array($parsed)) {
                     foreach ($parsed as $value) {
-                        if (is_array($value) && count($value) >= 3) {
+                        if (is_array($value) && count($value) >= 1) {
                             return array_slice($value, 0, 3);
                         }
                     }
